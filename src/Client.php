@@ -2,6 +2,7 @@
 
 namespace Crownsdevelopment\Coinbase;
 
+use Crownsdevelopment\Coinbase\Model\Buy;
 use Crownsdevelopment\Coinbase\Model\PaymentMethod;
 use Crownsdevelopment\Coinbase\Utility\Collection;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -100,11 +101,11 @@ class Client
      * @param string $requestPath The path is needed for authorization.
      * @access private
      */
-    private function getHeaders($requestPath)
+    private function getHeaders($requestPath, $requestType = 'GET')
     {
         $timestamp = time();
 
-        $signature = $this->createSignature($requestPath, '', $timestamp, 'GET');
+        $signature = $this->createSignature($requestPath, '', $timestamp, $requestType);
         $this->setApiSign($signature);
 
         return [
@@ -116,12 +117,43 @@ class Client
     }
 
     /**
+     * Place buy order.
+     * 
+     * @todo Fetch response as array and check if class properties match with it.
+     * @throws Excpeption
+     * @return Crownsdevelopment\Coinbase\Model\Buy|null
+     */
+    public function placeBuyOrder(string $accountId, PaymentMethod $paymentMethod, float $amount, string $currency = 'BTC'): ?Buy
+    {
+        $requestPath = '/accounts/' . $accountId . '/buys';
+
+        try {
+            $response = $this->httpClient->request('POST', self::BASE_URL . $requestPath, [
+                'headers' => $this->getHeaders($requestPath, 'POST'),
+                'body' => [
+                    'amount' => $amount,
+                    'currency' => $currency,
+                    'payment_method' => $paymentMethod->getId(),
+                    'commit' => false
+                    ]
+            ]);
+
+            if ($response->getStatusCode() == 200) {
+                return new Buy($response->toArray());
+            }
+
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
      * Get payment methods.
      * 
      * @throws Excpeption
-     * @return Coinbase\Utility\Collection;
+     * @return Crownsdevelopment\Coinbase\Utility\Collection|null
      */
-    public function getPaymentMethods()
+    public function getPaymentMethods(): ?Collection
     {
         $requestPath = '/payment-methods';
 
@@ -130,13 +162,15 @@ class Client
                 'headers' => $this->getHeaders($requestPath)
             ]);
 
-            $collection = new Collection();
+            if ($response->getStatusCode() == 200) {
+                $collection = new Collection();
 
-            foreach ($response->toArray() as $potentialObject) {
-                $collection->addItem(new PaymentMethod($potentialObject), $potentialObject['id']);
+                foreach ($response->toArray() as $potentialObject) {
+                    $collection->addItem(new PaymentMethod($potentialObject), $potentialObject['id']);
+                }
+        
+                return $collection;
             }
-    
-            return $collection;
 
         } catch (\Exception $e) {
             throw $e;
