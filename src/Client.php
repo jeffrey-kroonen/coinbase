@@ -131,7 +131,7 @@ class Client
             ]);
 
             $collection = new Collection();
-            dd($response->toArray());
+
             foreach ($response->toArray() as $potentialObject) {
                 $collection->addItem(new PaymentMethod($potentialObject), $potentialObject['id']);
             }
