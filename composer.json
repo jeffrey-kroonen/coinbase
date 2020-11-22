@@ -3,6 +3,7 @@
     "description": "A PHP Client for the Coinbase API.",
     "type": "library",
     "require": {
+        "php": "^7.3",
         "symfony/http-client": "5.1"
     },
     "require-dev": {
