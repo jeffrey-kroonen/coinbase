@@ -2,6 +2,8 @@
     "name": "crownsdevelopment/coinbase",
     "description": "A PHP Client for the Coinbase API.",
     "type": "library",
+    "homepage": "https://crownsdevelopment.nl",
+    "license": "GPL-3.0-only",
     "require": {
         "php": "^7.3",
         "symfony/http-client": "5.1"

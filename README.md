@@ -2,6 +2,12 @@
 
 PHP client library to use the Coinbase API.
 
+## Composer install
+Installing the Coinbae client for PHP can be done through Composer.
+```
+$ composer require crownsdevelopment/coinbase
+```
+
 ## Configuration
 To use the library you have to set **environment variables**. The following are required to create a connection with Coinbase.
 
