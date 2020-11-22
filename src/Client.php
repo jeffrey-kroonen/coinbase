@@ -152,6 +152,8 @@ class Client
         } catch (\Exception $e) {
             throw $e;
         }
+
+        return null;
     }
 
     /**
@@ -191,7 +193,7 @@ class Client
      * @throws Excpeption
      * @return Crownsdevelopment\Coinbase\Utility\Collection|null
      */
-    public function getPaymentMethods()
+    public function getPaymentMethods(): ?Collection
     {
         $requestPath = '/payment-methods';
 
@@ -215,6 +217,8 @@ class Client
         } catch (\Exception $e) {
             throw $e;
         }
+
+        return null;
     }
 
 }
