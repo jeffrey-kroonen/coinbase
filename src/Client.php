@@ -55,7 +55,6 @@ class Client
         return $this->apiSecret;
     }
 
-
     /**
      * Get the value of apiSign
      */ 
@@ -146,6 +145,8 @@ class Client
 
             if ($response->getStatusCode() == 200) {
                 return new Buy($response->toArray());
+            } else {
+                throw new HttpResponseException($response->getContent());
             }
 
         } catch (\Exception $e) {
@@ -173,6 +174,8 @@ class Client
 
             if ($response->getStatusCode() == 200) {
                 return true;
+            } else {
+                throw new HttpResponseException($response->getContent());
             }
 
         } catch (\Exception $e) {
@@ -205,6 +208,8 @@ class Client
                 }
         
                 return $collection;
+            } else {
+                throw new HttpResponseException($response->getContent());
             }
 
         } catch (\Exception $e) {
