@@ -10,6 +10,11 @@ use PHPUnit\Framework\TestCase;
  */
 final class EntityTest extends TestCase
 {
+    public function testAccountEntity()
+    {
+        $this->performEntityTest(\Crownsdevelopment\Coinbase\Model\Account::class);
+    }
+
     public function testBuyEntity()
     {
         $this->performEntityTest(\Crownsdevelopment\Coinbase\Model\Buy::class);
