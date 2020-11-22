@@ -191,7 +191,7 @@ class Client
      * @throws Excpeption
      * @return Crownsdevelopment\Coinbase\Utility\Collection|null
      */
-    public function getPaymentMethods(): ?Collection
+    public function getPaymentMethods()
     {
         $requestPath = '/payment-methods';
 
