@@ -2,6 +2,8 @@
 
 PHP client library to use the Coinbase API.
 
+🏗️ The PHP client is currently in development.
+
 ## Composer install
 Installing the Coinbae client for PHP can be done through Composer.
 ```
