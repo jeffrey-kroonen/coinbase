@@ -1,4 +1,4 @@
-# jeffrey-kroonen/coinbase
+# crownsdevelopment/coinbase
 
 PHP client library to use the Coinbase API.
 

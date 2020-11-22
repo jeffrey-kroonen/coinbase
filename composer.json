@@ -1,12 +1,12 @@
 {
-    "name": "jeffrey-kroonen/coinbase",
+    "name": "crownsdevelopment/coinbase",
     "description": "A PHP Client for the Coinbase API.",
     "type": "library",
     "require": {
         "symfony/http-client": "5.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "9.5.x-dev"
+        "phpunit/phpunit": "~9.3"
     },
     "authors": [
         {
@@ -14,5 +14,15 @@
             "email": "jeffreykroonen@gmail.com"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Crownsdevelopment\\Coinbase\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Crownsdevelopment\\Coinbase\\": "tests/"
+        }
+    }
 }
