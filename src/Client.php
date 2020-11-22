@@ -2,6 +2,7 @@
 
 namespace Crownsdevelopment\Coinbase;
 
+use Crownsdevelopment\Coinbase\Model\Account;
 use Crownsdevelopment\Coinbase\Model\Buy;
 use Crownsdevelopment\Coinbase\Model\PaymentMethod;
 use Crownsdevelopment\Coinbase\Utility\Collection;
@@ -85,7 +86,7 @@ class Client
      * @return string Returns a signature.
      * @access private
      */
-    private function createSignature($requestPath = '', $body = '', $timestamp = false, $method = 'GET')
+    private function createSignature($requestPath = '', $body = '', $timestamp = false, $method = 'GET'): string
     {
         $body = is_array($body) ? json_encode($body) : $body;
         $timestamp = $timestamp ? $timestamp : time();
@@ -101,7 +102,7 @@ class Client
      * @param string $requestPath The path is needed for authorization.
      * @access private
      */
-    private function getHeaders($requestPath, $requestType = 'GET')
+    private function getHeaders($requestPath, $requestType = 'GET'): array
     {
         $timestamp = time();
 
@@ -121,11 +122,16 @@ class Client
      * 
      * @todo Fetch response as array and check if class properties match with it.
      * @throws Excpeption
+     * @param Crownsdevelopment\Coinbase\Model\Account $account
+     * @param Crownsdevelopment\Coinbase\Model\PaymentMethod $paymentMethod
+     * @param float $amount
+     * @param string $currency
+     * @param bool $commit
      * @return Crownsdevelopment\Coinbase\Model\Buy|null
      */
-    public function placeBuyOrder(string $accountId, PaymentMethod $paymentMethod, float $amount, string $currency = 'BTC'): ?Buy
+    public function placeBuyOrder(Account $account, PaymentMethod $paymentMethod, float $amount, string $currency = 'BTC', $commit = false): ?Buy
     {
-        $requestPath = '/accounts/' . $accountId . '/buys';
+        $requestPath = '/accounts/' . $account->getId() . '/buys';
 
         try {
             $response = $this->httpClient->request('POST', self::BASE_URL . $requestPath, [
@@ -134,7 +140,7 @@ class Client
                     'amount' => $amount,
                     'currency' => $currency,
                     'payment_method' => $paymentMethod->getId(),
-                    'commit' => false
+                    'commit' => $commit
                     ]
             ]);
 
@@ -145,6 +151,35 @@ class Client
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    /**
+     * Commit a buy order.
+     * 
+     * @throws Exception
+     * @param Crownsdevelopment\Coinbase\Model\Account $account
+     * @param Crownsdevelopment\Coinbase\Model\Buy $buy
+     * @return bool
+     */
+    public function commitBuyOrder(Account $account, Buy $buy): bool
+    {
+        $requestPath = '/accounts/' . $account->getId() . '/buys/' . $buy->getId();
+
+        try {
+
+            $response = $this->httpClient->request('POST', self::BASE_URL . $requestPath, [
+                'headers' => $this->getHeaders($requestPath, 'POST')
+            ]);
+
+            if ($response->getStatusCode() == 200) {
+                return true;
+            }
+
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
+        return false;
     }
 
     /**
